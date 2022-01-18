@@ -1,3 +1,7 @@
+DROP DATABASE IF EXISTS life_manager;
+CREATE DATABASE life_manager;
+USE life_manager;
+
 
 SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
