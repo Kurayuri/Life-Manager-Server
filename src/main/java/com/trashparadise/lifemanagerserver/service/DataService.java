@@ -43,13 +43,16 @@ public class DataService {
         try {
             String json = download(uuid);
             DataBundleBean oldBean;
+            DataBundleBean currBean = gson.fromJson(data, DataBundleBean.class);
             try {
                 oldBean = gson.fromJson(json, DataBundleBean.class);
+                if (oldBean == null) {
+                    throw new Exception();
+                }
             } catch (Exception e) {
                 System.err.println("Server data error: " + uuid);
-                oldBean = gson.fromJson(data, DataBundleBean.class);
+                oldBean = currBean;
             }
-            DataBundleBean currBean = gson.fromJson(data, DataBundleBean.class);
 
             TreeMap<String, Bill> oldBills = new TreeMap<>();
             TreeMap<String, Work> oldWorks = new TreeMap<>();
