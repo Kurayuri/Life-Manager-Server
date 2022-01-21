@@ -5,7 +5,7 @@ plugins {
 }
 
 group = 'com.trashparadise'
-version = '0.1.1'
+version = '0.2.0'
 sourceCompatibility = '11'
 
 repositories {
@@ -15,7 +15,9 @@ repositories {
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:2.2.0'
+    implementation 'com.google.code.gson:gson:2.8.9'
     implementation 'commons-codec:commons-codec'
+    implementation 'org.springframework.security:spring-security-crypto'
     runtimeOnly 'mysql:mysql-connector-java'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }

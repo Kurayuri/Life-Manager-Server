@@ -4,7 +4,7 @@ import com.trashparadise.lifemanagerserver.bean.network.LoginResponse;
 import com.trashparadise.lifemanagerserver.bean.network.RegisterResponse;
 import com.trashparadise.lifemanagerserver.bean.User;
 import com.trashparadise.lifemanagerserver.mapper.UserMapper;
-import org.apache.commons.codec.digest.DigestUtils;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -18,33 +18,37 @@ public class UserService {
     }
 
     public int register(String username, String password) {
-        String uuid = java.util.UUID.randomUUID().toString().replaceAll("-","");
-        String pswd = DigestUtils.sha1Hex(password);
+        if(username.length()<1 || password.length()<1){
+            return RegisterResponse.ERROR;
+        }
+        String uuid = java.util.UUID.randomUUID().toString().replaceAll("-", "");
+        String hashPassword = BCrypt.hashpw(password, BCrypt.gensalt());
         try {
-            return userMapper.insert(new User(uuid, username, pswd)) == 1
+            return userMapper.insert(new User(uuid, username, hashPassword)) == 1
                     ? RegisterResponse.OK : RegisterResponse.ERROR;
         } catch (Exception e) {
-            return RegisterResponse.ERROR;
+            return RegisterResponse.EXIST;
         }
     }
 
-    public String getUuid(String username){
-        ArrayList<String> uuidList=userMapper.select(username);
-        if (uuidList.size()==1){
+    public String getUuid(String username) {
+        ArrayList<String> uuidList = userMapper.selectUuid(username);
+        if (uuidList.size() == 1) {
             return uuidList.get(0);
         }
         return "";
     }
 
     public int login(String username, String password) {
-        String passwordSha1 = DigestUtils.sha1Hex(password);
-        if (userMapper.select(username).size() != 1) {
-            return LoginResponse.MISS;
-        }
-        if (userMapper.login(username, passwordSha1) != 1) {
+        ArrayList<String> hashPasswords = userMapper.selectPassword(username);
+        if(username.length()<1 || password.length()<1){
             return LoginResponse.ERROR;
+        }
+        if (hashPasswords.size() != 1) {
+            return LoginResponse.MISS;
         } else {
-            return LoginResponse.OK;
+            return BCrypt.checkpw(password, hashPasswords.get(0)) ?
+                    LoginResponse.OK : LoginResponse.ERROR;
         }
     }
 }

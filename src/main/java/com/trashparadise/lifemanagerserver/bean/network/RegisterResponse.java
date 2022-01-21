@@ -1,8 +1,10 @@
 package com.trashparadise.lifemanagerserver.bean.network;
 
 public class RegisterResponse extends Response {
+    public static final int EXIST=2;
     public static final String[] descriptions = new String[]{
             "Register Successes",
+            "Register Error",
             "Username Exists"
     };
 

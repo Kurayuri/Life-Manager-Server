@@ -13,9 +13,9 @@ public interface UserMapper {
     int insert(User user);
 
     @Select("SELECT uuid FROM user WHERE username=#{username}")
-    ArrayList<String> select(String username);
+    ArrayList<String> selectUuid(String username);
 
-    @Select("SELECT COUNT(*) FROM user WHERE username=#{username} AND password=#{password}")
-    int login(String username, String password);
+    @Select("SELECT password FROM user WHERE username=#{username}")
+    ArrayList<String> selectPassword(String username);
 }
 

@@ -42,6 +42,7 @@ CREATE TABLE `user`  (
   PRIMARY KEY (`uuid`, `username`) USING BTREE,
   UNIQUE INDEX `username`(`username` ASC) USING BTREE,
   UNIQUE INDEX `uuid`(`uuid` ASC) USING BTREE
+  CONSTRAINT `username_empty` CHECK (`username` <> _utf8mb3'')
 ) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 SET FOREIGN_KEY_CHECKS = 1;
