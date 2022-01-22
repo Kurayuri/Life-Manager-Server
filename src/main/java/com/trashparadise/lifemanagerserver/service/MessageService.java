@@ -1,5 +1,7 @@
 package com.trashparadise.lifemanagerserver.service;
 
+import com.google.gson.Gson;
+import com.trashparadise.lifemanagerserver.bean.Answer;
 import com.trashparadise.lifemanagerserver.mapper.MessageMapper;
 import org.springframework.stereotype.Service;
 
@@ -26,16 +28,18 @@ public class MessageService {
         return ERROR;
     }
 
-    public ArrayList<String> receive(String src) {
-        ArrayList<String> data = null;
+    public Answer receive(String dst) {
+        Gson gson = new Gson();
+        ArrayList<String> data;
         try {
-            data = messageMapper.select(src);
-            messageMapper.delete(src);
-            return data;
+            data = messageMapper.select(dst);
+            messageMapper.delete(dst);
+            return new Answer(OK, gson.toJson(data));
 
         } catch (Exception e) {
             System.err.print(e);
         }
-        return null;
+        data = new ArrayList<>();
+        return new Answer(ERROR, gson.toJson(data));
     }
 }

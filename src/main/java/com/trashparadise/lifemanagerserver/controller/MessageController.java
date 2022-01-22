@@ -1,9 +1,8 @@
 package com.trashparadise.lifemanagerserver.controller;
 
-import com.trashparadise.lifemanagerserver.bean.network.ReceiveRequest;
-import com.trashparadise.lifemanagerserver.bean.network.ReceiveResponse;
-import com.trashparadise.lifemanagerserver.bean.network.SendRequest;
-import com.trashparadise.lifemanagerserver.bean.network.SendResponse;
+import com.trashparadise.lifemanagerserver.bean.Answer;
+import com.trashparadise.lifemanagerserver.bean.network.*;
+import com.trashparadise.lifemanagerserver.service.DataService;
 import com.trashparadise.lifemanagerserver.service.MessageService;
 import com.trashparadise.lifemanagerserver.service.SessionService;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -36,10 +35,13 @@ public class MessageController {
     public ReceiveResponse receive(@RequestBody ReceiveRequest receiveRequest) {
         int state = sessionService.authenticate(receiveRequest.getUuid(), receiveRequest.getSession());
 
-        ArrayList<String> data = null;
+        String data = "";
         if (state == SessionService.OK) {
-            data = messageService.receive(receiveRequest.getUuid());
-            state = data != null ? ReceiveResponse.OK : ReceiveResponse.UNKNOWN;
+            Answer ans = messageService.receive(receiveRequest.getUuid());
+            state = ans.getState();
+            data = ans.getData();
+            state = state == MessageService.OK ?
+                    ReceiveResponse.OK : ReceiveResponse.UNKNOWN;
         }
         return new ReceiveResponse(state, data);
     }

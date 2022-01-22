@@ -18,9 +18,9 @@ public interface MessageMapper {
 //    @Delete("DELETE FROM message WHERE src_uuid=#{src} AND dst_uuid=#{dst}")
 //    int delete(String src, String dst);
 
-    @Select("SELECT data FROM message WHERE src_uuid=#{src}")
+    @Select("SELECT data FROM message WHERE dst_uuid=#{src}")
     ArrayList<String> select(String src);
 
-    @Delete("DELETE FROM message WHERE src_uuid=#{src}")
+    @Delete("DELETE FROM message WHERE dst_uuid=#{src}")
     int delete(String src);
 }
